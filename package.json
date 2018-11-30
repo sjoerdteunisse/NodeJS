@@ -14,7 +14,7 @@
     "nodemon": "^1.18.7"
   },
   "scripts": {
-    "test": "./node_modules/.bin/mocha --reporter spec --exit",
+    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
   "author": "",
