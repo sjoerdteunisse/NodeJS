@@ -7,7 +7,7 @@ const bodyParser = require('body-parser');
 const morgan =  require('morgan');
 var app = express();
 
-const expressPort = 3000;
+const expressPort = process.env.PORT || 3000;
 
 app.use(morgan('dev'));
 app.use(bodyParser.json());
