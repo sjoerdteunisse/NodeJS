@@ -1,4 +1,3 @@
-
 class Error{
 
     constructor(errorName, errorStatus){
@@ -7,6 +6,5 @@ class Error{
         this.timeStamp = new Date();
     }
 }
-
 
 module.exports = Error;

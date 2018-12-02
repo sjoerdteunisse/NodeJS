@@ -11,7 +11,7 @@ describe('Game', () => {
 
 it('Should be initialized succesfully when privind valid arguments', (done) => {
 
-    const game = new Game(' abc ', ' def ', 2018, ' fps ');
+    const game = new Game('abc', ' def ', 2018, ' fps ');
 
 
     game.should.have.property('name').that.is.a('string').and.equals('abc');

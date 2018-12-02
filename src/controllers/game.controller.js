@@ -10,21 +10,22 @@ module.exports = {
     
     getAll(req, res){
         console.log('getAll');
+
         res.status(200).json(games).end();
     },
 
     post(req, res){
         console.log('post');
     
-        if(req.body.name != ''){
-
+        //Basic post check if properties are not string.empty||.
+        if(req.body.name != '' && req.body.producer != '' && req.body.producer != '' && req.body.type != ''){
+            
             const game = new Game(req.body.name, req.body.producer, req.body.year, req.body.type);
             games.push(game);
-
-            res.status(200).json({message: 'Succesfully added'}).end();
+            res.status(200).json(game).end();
         }
         else{
-            res.status(404).json({message: 'Error adding'}).end();
+            next(new ApiError('Failed to add object', '500'))
         }
     },
 
@@ -34,16 +35,19 @@ module.exports = {
         const id = req.params.id;
         var game = games[id]
         
-        if(game != null)
+        if(id < 0 || id > games.length-1){
+            next(new ApiError('Object not found', '404'))
+        }
+        else
         {
-            if(req.body.name != ''){
+            if(req.body.name != '' && req.body.producer != '' && req.body.producer != '' && req.body.type != ''){
                 const game = new Game(req.body.name, req.body.producer, req.body.year, req.body.type);
                 games[id] = game;
     
-                res.status(200).json({message: 'Succesfully replaced'}).end();
+                res.status(200).json(game).end();
             }
             else{
-                res.status(404).json({message: 'Error replacing'}).end();
+                next(new ApiError('Replacing object failed', '500'))
             }
         }
 
@@ -51,12 +55,11 @@ module.exports = {
 
     getById(req, res, next){
         console.log('getById');
+
         const id = req.params.id;
 
-        if(id < 0 || id > games.length-1){
-                const error = new ApiError('Id not found', '404')
-
-            next(error)
+        if(id < 0 || id > games.length - 1){
+            next(new ApiError('Id not found', '404'))
         }
         else{
             res.status(200).json(games[id]).end();
@@ -66,13 +69,12 @@ module.exports = {
     deleteById(req, res, next){
         console.log('deleteById');
 
-        //const store id.
         const id = req.params.id;
-        //get object from memory
         var game = games[id];
 
         if(game != null)
         {
+            //splice(pos - amount to be removed)
             games.splice(id, 1);
             res.status(200).json({message: 'Succesfully removed'});
         }else{

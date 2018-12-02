@@ -26,3 +26,5 @@ app.use("*", (err, req, res, next) =>{
 });
 
 app.listen(expressPort, () => console.log(`Example app listening on ${expressPort}`));
+
+module.exports = app
