@@ -15,14 +15,17 @@ app.use(bodyParser.json());
 //Regular routing
 app.use('/api', gameroutes);
 
-//Handler voor niet bestaande routes
+//Handler non existent routes
 app.use('*', (req, res, next) =>{ 
   next(new apiError('Non existing endpoint', '404'))
 });
 
 //Handler for errors
 app.use("*", (err, req, res, next) =>{
-  res.status(err.errorStatus).json(err);
+  
+  //For some reason, next doesn't pass the err object.
+  console.log('YEAG' + err.errorName);
+  res.status(err.errorStatus >= 100 && err.errorStatus < 600 ? err.errorStatus : 500).json(err).end();
 });
 
 app.listen(expressPort, () => console.log(`Example app listening on ${expressPort}`));

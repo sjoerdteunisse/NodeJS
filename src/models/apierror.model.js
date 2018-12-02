@@ -1,5 +1,4 @@
 class Error{
-
     constructor(errorName, errorStatus){
         this.errorName = errorName;
         this.errorStatus = errorStatus;

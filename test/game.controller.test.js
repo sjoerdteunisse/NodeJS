@@ -47,6 +47,62 @@ describe('Games API POST', () => {
     });
 })
 
+describe('Games API POST invalid object', () => {
+
+    it('should return a 500 error on posting an invalid object.', (done) => {
+ 
+        chai.request(server)
+            .post(endpointToTest)
+            .send({
+                'name': 'gameName',
+            })
+            .end((err, res) => {
+                res.should.have.status(500)
+
+                res.body.should.be.a('object')
+
+                done();
+        })
+    });
+})
+
+describe('Calling an invalid route should throw a ApiError', () => {
+
+    it('should return a 404 error.', (done) => {
+ 
+        chai.request(server)
+            .get('/api/gameszz')
+            .send()
+            .end((err, res) => {
+                res.should.have.status(404)
+                done();
+        })
+    });
+})
+
+describe('Calling an invalid route or failed call, should return an object of type ApiError', () => {
+
+    it('should return a 404 error.', (done) => {
+ 
+        chai.request(server)
+            .get('/api/gameszz')
+            .send()
+            .end((err, res) => {
+                res.should.have.status(404)
+
+                res.body.should.be.a('object');
+
+                const apiError = res.body;
+
+                apiError.should.have.property('errorName');
+                apiError.should.have.property('errorStatus');
+                apiError.should.have.property('timeStamp');
+
+                done();
+        })
+    });
+})
+
 describe('Games API PUT', () => {
 
     it('should return a valid game when puting a valid object', (done) => {

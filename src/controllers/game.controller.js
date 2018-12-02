@@ -10,22 +10,21 @@ module.exports = {
     
     getAll(req, res){
         console.log('getAll');
-
         res.status(200).json(games).end();
     },
 
-    post(req, res){
+    post(req, res, next){
         console.log('post');
     
-        //Basic post check if properties are not string.empty||.
-        if(req.body.name != '' && req.body.producer != '' && req.body.producer != '' && req.body.type != ''){
-            
+        if(req.body.name && req.body.producer && req.body.producer  && req.body.type){
             const game = new Game(req.body.name, req.body.producer, req.body.year, req.body.type);
             games.push(game);
             res.status(200).json(game).end();
         }
         else{
-            next(new ApiError('Failed to add object', '500'))
+            const err = new ApiError('Failed to add object', '500');
+            console.log(err);
+            next(err);
         }
     },
 
@@ -40,17 +39,20 @@ module.exports = {
         }
         else
         {
-            if(req.body.name != '' && req.body.producer != '' && req.body.producer != '' && req.body.type != ''){
-                const game = new Game(req.body.name, req.body.producer, req.body.year, req.body.type);
-                games[id] = game;
-    
-                res.status(200).json(game).end();
-            }
-            else{
-                next(new ApiError('Replacing object failed', '500'))
+            if(req.body.constructor === Game && Game.keys(req.body).length === 0) {
+                next(new ApiError('Replacing object failed', '500'));
+                }else{
+                if(req.body.name && req.body.producer && req.body.producer  && req.body.type){
+                    const game = new Game(req.body.name, req.body.producer, req.body.year, req.body.type);
+                    games[id] = game;
+        
+                    res.status(200).json(game).end();    
+                }
+                else {
+                    next(new ApiError('Object invalid', '500'));
+                }
             }
         }
-
     },
 
     getById(req, res, next){
@@ -72,13 +74,14 @@ module.exports = {
         const id = req.params.id;
         var game = games[id];
 
-        if(game != null)
+        if(game != undefined)
         {
             //splice(pos - amount to be removed)
             games.splice(id, 1);
             res.status(200).json({message: 'Succesfully removed'});
         }else{
-            res.status(404).json({error: "Object not found"}).end();
+
+            next(new ApiError('Object not found', 404));
         }
     }
 };
