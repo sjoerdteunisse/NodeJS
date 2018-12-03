@@ -145,6 +145,40 @@ describe('Games API PUT', () => {
     });
 })
 
+
+describe('Games API PUT', () => {
+
+    it('should return a 404 error that object cannot be modified as it is non existent', (done) => {
+ 
+
+        chai.request(server)
+            .put(endpointToTest + "/50")
+            .send({
+                'name': 'gameName',
+                'type': 'typeOfGame'
+            })
+            .end((err, res) => {
+                res.should.have.status(404)
+                res.body.should.be.a('object')
+
+                const response = res.body;
+                
+                //Check if properties are still existent in object returned.
+                 response.should.have.property('errorName');
+                 response.should.have.property('timeStamp');
+                 response.should.have.property('errorStatus');
+
+                // //Do the properties still match?
+                response.errorName.should.equal('Object not found');
+
+
+                done();
+        })
+    });
+})
+
+
+
 describe('Games API GetAll', () => {
     //In memory there is an object in the array at pos 0(default). And added by post, we should have 2 elements total.
 
@@ -234,6 +268,34 @@ describe('Games API Delete', () => {
 
                 //Do the properties still match?
                 response.message.should.equal('Succesfully removed');
+
+                //console.dir(res.body);
+                done();
+        })
+    });
+})
+
+
+describe('Games API Delete Non Existing', () => {
+
+    it('should return status 404', (done) => {
+ 
+        chai.request(server)
+            .del(endpointToTest + '/1000')
+            .send()
+            .end((err, res) => {
+                res.should.have.status(404)
+                res.body.should.be.a('object')
+
+                const response = res.body;
+                
+                //Check if properties are still existent in object returned.
+                 response.should.have.property('errorName');
+                 response.should.have.property('timeStamp');
+                 response.should.have.property('errorStatus');
+
+                // //Do the properties still match?
+                response.errorName.should.equal('Object not found');
 
                 //console.dir(res.body);
                 done();
