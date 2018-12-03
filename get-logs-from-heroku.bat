@@ -1,0 +1,1 @@
+cmd /k heroku logs -a avansgamesapi --tail
