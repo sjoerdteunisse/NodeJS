@@ -16,7 +16,7 @@ module.exports = {
     post(req, res, next){
         console.log('post');
     
-        if(req.body.name && req.body.producer && req.body.producer  && req.body.type){
+        if(req.body.name && req.body.producer && req.body.year  && req.body.type){
             const game = new Game(req.body.name, req.body.producer, req.body.year, req.body.type);
             games.push(game);
             res.status(200).json(game).end();
@@ -42,7 +42,7 @@ module.exports = {
             if(req.body.constructor === Game && Game.keys(req.body).length === 0) {
                 next(new ApiError('Replacing object failed', '500'));
                 }else{
-                if(req.body.name && req.body.producer && req.body.producer  && req.body.type){
+                if(req.body.name && req.body.producer && req.body.year  && req.body.type){
                     const game = new Game(req.body.name, req.body.producer, req.body.year, req.body.type);
                     games[id] = game;
         

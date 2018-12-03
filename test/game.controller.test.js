@@ -7,8 +7,7 @@ chai.use(chaiHttp)
 
 const endpointToTest = '/api/games'
 
-describe('Games API POST', () => {
-
+describe('Games API POSTING a valid object', () => {
     it('should return a valid game when posting a valid object', (done) => {
  
         chai.request(server)
@@ -47,7 +46,7 @@ describe('Games API POST', () => {
     });
 })
 
-describe('Games API POST invalid object', () => {
+describe('Games API POSTING an invalid object', () => {
 
     it('should return a 500 error on posting an invalid object.', (done) => {
  
@@ -74,7 +73,18 @@ describe('Calling an invalid route should throw a ApiError', () => {
             .get('/api/gameszz')
             .send()
             .end((err, res) => {
-                res.should.have.status(404)
+                res.should.have.status(404);
+                res.body.should.be.a('object');
+
+                const apiError = res.body;
+
+                //Check if properties are still existent in object returned.
+                apiError.should.have.property('errorName');
+                apiError.should.have.property('errorStatus');
+                apiError.should.have.property('timeStamp');
+
+                //Check if values match the expected return value.
+                apiError.errorName.should.equal('Non existing endpoint');
                 done();
         })
     });
@@ -94,9 +104,13 @@ describe('Calling an invalid route or failed call, should return an object of ty
 
                 const apiError = res.body;
 
+                //Check if properties are still existent in object returned.
                 apiError.should.have.property('errorName');
                 apiError.should.have.property('errorStatus');
                 apiError.should.have.property('timeStamp');
+
+                 //Check if values match the expected return value.
+                 apiError.errorName.should.equal('Non existing endpoint');
 
                 done();
         })
@@ -195,9 +209,10 @@ describe('Games API GetAll', () => {
                 //Take the first element;
                 const Games = res.body;
 
-                for(var i = 0; i < res.body.length; i++){
+                for(var i = 0; i < Games.length; i++){
 
-                    if (res.body.hasOwnProperty('producer') && res.body.hasOwnProperty('year') && res.body.hasOwnProperty('type')) {
+                    //Object games consists out of (name, producer, year, type)
+                    if(Games[i].name && Games[i].producer && Games[i].year  && Games[i].type){
 
                         //Check if properties are still existent in object returned.
                         Games[i].should.have.property('name');
@@ -212,8 +227,6 @@ describe('Games API GetAll', () => {
                         Games[i].type.should.equal('typeOfGame');
                     }
                 }
-                //debug
-                //console.dir(res.body);
                 done();
         })
     });
