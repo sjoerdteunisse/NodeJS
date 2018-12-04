@@ -10,7 +10,7 @@ module.exports = {
 
         if (req.body.email && req.body.password && req.body.firstname && req.body.lastname) {
 
-            const sqlCreateUserQuery = "INSERT INTO users (email, password, firstname, lastname) VALUES ( ?, ?, ? )";
+            const sqlCreateUserQuery = "INSERT INTO users (email, password, firstname, lastname) VALUES ( ?, ?, ?, ? )";
 
             connectionPool.query(sqlCreateUserQuery, [req.body.email, req.body.password, req.body.firstname, req.body.lastname], function (err, rows, fields) {
                 if (err) {
