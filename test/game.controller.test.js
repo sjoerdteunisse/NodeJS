@@ -7,7 +7,7 @@ chai.use(chaiHttp)
 
 const endpointToTest = '/api/games'
 
-describe('Games API POSTING a valid object', () => {
+describe('Games API POST', () => {
     it('should return a valid game when posting a valid object', (done) => {
  
         chai.request(server)
@@ -41,9 +41,6 @@ describe('Games API POSTING a valid object', () => {
                 done();
         })
     });
-})
-
-describe('Games API POSTING an invalid object', () => {
 
     it('should return a 500 error on posting an invalid object.', (done) => {
  
@@ -57,31 +54,6 @@ describe('Games API POSTING an invalid object', () => {
 
                 res.body.should.be.a('object')
 
-                done();
-        })
-    });
-})
-
-describe('Calling an invalid route should throw a ApiError', () => {
-
-    it('should return a 404 error.', (done) => {
- 
-        chai.request(server)
-            .get('/api/gameszz')
-            .send()
-            .end((err, res) => {
-                res.should.have.status(404);
-                res.body.should.be.a('object');
-
-                const apiError = res.body;
-
-                //Check if properties are still existent in object returned.
-                apiError.should.have.property('errorName');
-                apiError.should.have.property('errorStatus');
-                apiError.should.have.property('timeStamp');
-
-                //Check if values match the expected return value.
-                apiError.errorName.should.equal('Non existing endpoint');
                 done();
         })
     });
@@ -114,128 +86,17 @@ describe('Calling an invalid route or failed call, should return an object of ty
     });
 })
 
-// describe('Games API PUT', () => {
+describe('Games API PUT', () => {
 
-//     it('should return a valid game when puting a valid object', (done) => {
- 
-//         //In memory there is an object in the array at pos 0.
-
-//         chai.request(server)
-//             .put(endpointToTest + "/0")
-//             .send({
-//                 'name': 'gameName',
-//                 'producer': 'producer',
-//                 'year': 2018,
-//                 'type': 'typeOfGame'
-//             })
-//             .end((err, res) => {
-//                 res.should.have.status(200)
-//                 res.body.should.be.a('object')
-
-//                 const Games = res.body;
-                
-//                 //Check if properties are still existent in object returned.
-//                 Games.should.have.property('name');
-//                 Games.should.have.property('producer');
-//                 Games.should.have.property('year');
-//                 Games.should.have.property('type');
-
-
-//                 //Do the properties still match?
-//                 Games.name.should.equal('gameName');
-//                 Games.producer.should.equal('producer');
-//                 Games.year.should.equal(2018);
-//                 Games.type.should.equal('typeOfGame');
-
-                
-//                 //debug
-//                 //console.dir(res.body);
-                
-//                 done();
-//         })
-//     });
-// })
-
-
-// describe('Games API PUT', () => {
-
-//     it('should return a 404 error that object cannot be modified as it is non existent', (done) => {
- 
-
-//         chai.request(server)
-//             .put(endpointToTest + "/50")
-//             .send({
-//                 'name': 'gameName',
-//                 'type': 'typeOfGame'
-//             })
-//             .end((err, res) => {
-//                 res.should.have.status(404)
-//                 res.body.should.be.a('object')
-
-//                 const response = res.body;
-                
-//                 //Check if properties are still existent in object returned.
-//                  response.should.have.property('errorName');
-//                  response.should.have.property('timeStamp');
-//                  response.should.have.property('errorStatus');
-
-//                 // //Do the properties still match?
-//                 response.errorName.should.equal('Object not found');
-
-
-//                 done();
-//         })
-//     });
-// })
-
-
-
-// describe('Games API GetAll', () => {
-//     //In memory there is an object in the array at pos 0(default). And added by post, we should have 2 elements total.
-
-//     it('should return a valid array of games (2) item', (done) => {
- 
-//         chai.request(server)
-//             .get(endpointToTest)
-//             .send()
-//             .end((err, res) => {
-//                 res.should.have.status(200)
-//                 res.body.should.be.a('array')
-
-//                 console.dir(res.body);
-//                 //Take the first element;
-//                 const Games = res.body;
-
-//                 for(var i = 0; i < Games.length; i++){
-
-//                     //Object games consists out of (name, producer, year, type)
-//                     if(Games[i].name && Games[i].producer && Games[i].year  && Games[i].type){
-
-//                         //Check if properties are still existent in object returned.
-//                         Games[i].should.have.property('name');
-//                         Games[i].should.have.property('producer');
-//                         Games[i].should.have.property('year');
-//                         Games[i].should.have.property('type');
-
-//                         //Do the properties still match?
-//                         Games[i].name.should.equal('gameName');
-//                         Games[i].producer.should.equal('producer');
-//                         Games[i].year.should.equal(2018);
-//                         Games[i].type.should.equal('typeOfGame');
-//                     }
-//                 }
-//                 done();
-//         })
-//     });
-// })
-
-describe('Games API GetById', () => {
-
-    it('should return a valid game when getting object at position 1', (done) => {
- 
+    it('should return a valid game when puting a valid object', (done) => {
         chai.request(server)
-            .get(endpointToTest + '/1')
-            .send()
+            .put(endpointToTest + "/1")
+            .send({
+                'name': 'gameName',
+                'producer': 'producer',
+                'year': 2018,
+                'type': 'typeOfGame'
+            })
             .end((err, res) => {
                 res.should.have.status(200)
                 res.body.should.be.a('object')
@@ -249,66 +110,155 @@ describe('Games API GetById', () => {
                 Games.should.have.property('type');
 
 
+                //Do the properties still match?
+                Games.name.should.equal('gameName');
+                Games.producer.should.equal('producer');
+                Games.year.should.equal(2018);
+                Games.type.should.equal('typeOfGame');
+
+                
+                //debug
+                //console.dir(res.body);
+                
+                done();
+        })
+    });
+
+    it('should return a 404 error that object cannot be modified as it is non existent', (done) => {
+ 
+
+        chai.request(server)
+            .put(endpointToTest + "/50")
+            .send({
+                'name': 'gameName',
+                'type': 'typeOfGame'
+            })
+            .end((err, res) => {
+                res.should.have.status(404)
+                res.body.should.be.a('object')
+
+                const response = res.body;
+                
+                //Check if properties are still existent in object returned.
+                 response.should.have.property('errorName');
+                 response.should.have.property('timeStamp');
+                 response.should.have.property('errorStatus');
+
                 // //Do the properties still match?
-                // Games.name.should.equal('gameName');
-                // Games.producer.should.equal('producer');
-                // Games.year.should.equal(2018);
-                // Games.type.should.equal('typeOfGame');
+                response.errorName.should.equal('Object not found');
+
 
                 done();
         })
     });
 })
 
-// describe('Games API Delete', () => {
 
-//     it('should return status 200 and the message succesfully removed ', (done) => {
+describe('Games API GetAll', () => {
+
+    it('should return a valid array of games (x) item', (done) => {
  
-//         chai.request(server)
-//             .del(endpointToTest + '/1')
-//             .send()
-//             .end((err, res) => {
-//                 res.should.have.status(200)
-//                 res.body.should.be.a('object')
+        chai.request(server)
+            .get(endpointToTest)
+            .send()
+            .end((err, res) => {
+                res.should.have.status(200)
+                res.body.should.be.a('array')
 
-//                 const response = res.body;
-                
-//                 //Check if properties are still existent in object returned.
-//                 response.should.have.property('message');
+                console.dir(res.body);
+                //Take the first element;
+                const Games = res.body;
 
-//                 //Do the properties still match?
-//                 response.message.should.equal('Succesfully removed');
+                for(var i = 0; i < Games.length; i++){
 
-//                 //console.dir(res.body);
-//                 done();
-//         })
-//     });
-// })
+                    //Object games consists out of (name, producer, year, type)
+                    if(Games[i].name && Games[i].producer && Games[i].year  && Games[i].type){
 
+                        //Check if properties are still existent in object returned.
+                        Games[i].should.have.property('name');
+                        Games[i].should.have.property('producer');
+                        Games[i].should.have.property('year');
+                        Games[i].should.have.property('type');
+                    }
+                }
+                done();
+        })
+    });
+})
 
-// describe('Games API Delete Non Existing', () => {
+describe('Games API GetById', () => {
 
-//     it('should return status 404', (done) => {
+    it('should return a valid game when getting object at position 3', (done) => {
  
-//         chai.request(server)
-//             .del(endpointToTest + '/1000')
-//             .send()
-//             .end((err, res) => {
-//                 res.should.have.status(404)
-//                 res.body.should.be.a('object')
+        chai.request(server)
+            .get(endpointToTest + '/3')
+            .send()
+            .end((err, res) => {
+                res.should.have.status(200)
+                res.body.should.be.a('object')
 
-//                 const response = res.body;
+                const Games = res.body;
                 
-//                 //Check if properties are still existent in object returned.
-//                  response.should.have.property('errorName');
-//                  response.should.have.property('timeStamp');
-//                  response.should.have.property('errorStatus');
+                //Check if properties are still existent in object returned.
+                Games.should.have.property('name');
+                Games.should.have.property('producer');
+                Games.should.have.property('year');
+                Games.should.have.property('type');
 
-//                 // //Do the properties still match?
-//                 response.errorName.should.equal('Object not found');
+                done();
+        })
+    });
+})
 
-//                 //console.dir(res.body);
-//                 done();
-//         })
-//     });
-// })
+describe('Games API Delete', () => {
+
+    it('should return status 200 and the message succesfully removed ', (done) => {
+ 
+        chai.request(server)
+            .del(endpointToTest + '/1')
+            .send()
+            .end((err, res) => {
+                res.should.have.status(200)
+                res.body.should.be.a('object')
+
+                const response = res.body;
+                
+                //Check if properties are still existent in object returned.
+                response.should.have.property('message');
+
+                //Do the properties still match?
+                response.message.should.equal('Succesfully removed');
+
+                //console.dir(res.body);
+                done();
+        })
+    });
+})
+
+
+describe('Games API Delete Non Existing', () => {
+
+    it('should return status 404', (done) => {
+ 
+        chai.request(server)
+            .del(endpointToTest + '/1000')
+            .send()
+            .end((err, res) => {
+                res.should.have.status(404)
+                res.body.should.be.a('object')
+
+                const response = res.body;
+                
+                //Check if properties are still existent in object returned.
+                 response.should.have.property('errorName');
+                 response.should.have.property('timeStamp');
+                 response.should.have.property('errorStatus');
+
+                // //Do the properties still match?
+                response.errorName.should.equal('Object not found');
+
+                //console.dir(res.body);
+                done();
+        })
+    });
+})

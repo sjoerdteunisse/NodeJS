@@ -1,6 +1,7 @@
 const gameController = require('./src/controllers/game.controller');
 const apiError = require('./src/models/apierror.model');
 const gameroutes = require('./src/routes/game.routes');
+const userRoutes = require('./src/routes/user.routes');
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -14,6 +15,7 @@ app.use(bodyParser.json());
 
 //Regular routing
 app.use('/api', gameroutes);
+app.use('/api', userRoutes);
 
 //Handler non existent routes
 app.use('*', (req, res, next) =>{ 

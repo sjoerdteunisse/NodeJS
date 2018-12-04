@@ -2,12 +2,6 @@ const Game = require('../models/game.model');
 const ApiError = require('../models/apierror.model');
 const connectionPool = require('../config/mySql');
 
-// 
-
-var games = [
-    //new Game('Battlefield 5', 'EA',2018, 'FPS')
-];
-
 module.exports = {
 
     getAll(req, res, next) {
@@ -33,7 +27,7 @@ module.exports = {
         if (req.body.name && req.body.producer && req.body.year && req.body.type) {
             const game = new Game(req.body.name, req.body.producer, req.body.year, req.body.type);
 
-            connectionPool.query("INSERT INTO games (`ID`, `title`, `producer`, `year`, `Type`, `LaatstGewijzigdOp`) VALUES ?, ?, ?, ?, ?, ?", function (err, rows, fields) {
+            connectionPool.query("INSERT INTO games (title, producer, year, Type) VALUES (?, ?, ?, ?)", [game.name, game.producer, game.year, game.type] , function (err, rows, fields) {
                 if (err) {
                     console.log(err);
                     return next(new ApiError('Failed to submit game', 500));
@@ -41,8 +35,6 @@ module.exports = {
 
                 res.status(200).json(game).end();
             });
-
-            //games.push(game);
         }
         else {
             const err = new ApiError('Failed to add object', '500');
@@ -55,26 +47,25 @@ module.exports = {
         console.log('put');
 
         const id = req.params.id;
-        var game = games[id]
 
-        if (id < 0 || id > games.length - 1) {
-            next(new ApiError('Object not found', '404'))
+        if (req.body.name && req.body.producer && req.body.year && req.body.type) {
+            const game = new Game(req.body.name, req.body.producer, req.body.year, req.body.type);
+
+            connectionPool.query("UPDATE games SET title = ?, producer = ?, year = ?, Type = ? WHERE ID = ?", [game.name, game.producer, game.year, game.type, id] , function (err, rows, fields) {
+                if (err) {
+                    console.log(err);
+                    return next(new ApiError('Fatal error occured', 500));
+                }
+
+                res.status(200).json(game).end();
+            });
         }
         else {
-            if (req.body.constructor === Game && Game.keys(req.body).length === 0) {
-                next(new ApiError('Replacing object failed', '500'));
-            } else {
-                if (req.body.name && req.body.producer && req.body.year && req.body.type) {
-                    const game = new Game(req.body.name, req.body.producer, req.body.year, req.body.type);
-                    games[id] = game;
-
-                    res.status(200).json(game).end();
-                }
-                else {
-                    next(new ApiError('Object invalid', '500'));
-                }
-            }
+            const err = new ApiError('Object not found', 404);
+            console.log(err);
+            next(err);
         }
+
     },
 
     getById(req, res, next) {
@@ -82,7 +73,7 @@ module.exports = {
 
         const id = req.params.id;
 
-        connectionPool.query("SELECT * FROM games where id = ?", id, function (err, rows, fields) {
+        connectionPool.query("SELECT * FROM games where id = ?", [id], function (err, rows, fields) {
             if (err) {
                 console.log(err);
                 return next(new ApiError('Fatal error occured', 500));
@@ -102,15 +93,24 @@ module.exports = {
         console.log('deleteById');
 
         const id = req.params.id;
-        var game = games[id];
-
-        if (game != undefined) {
-            //splice(pos - amount to be removed)
-            games.splice(id, 1);
-            res.status(200).json({ message: 'Succesfully removed' });
-        } else {
-
-            next(new ApiError('Object not found', 404));
+       
+        if(!id){
+          return next(new ApiError('Object not found', 500));
         }
+
+        connectionPool.query("DELETE FROM games where id = ?", [id], function (err, rows, fields) {
+            if (err) {
+                console.log(err);
+                return next(new ApiError('Fatal error occured', 500));
+            }
+
+            if(rows.affectedRows > 0){
+                res.status(200).json({ message: 'Succesfully removed' });
+            }
+            else{
+                return next(new ApiError('Object not found', 404));
+            }
+
+        });
     }
 };
