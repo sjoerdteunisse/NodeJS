@@ -10,13 +10,9 @@ module.exports = {
 
         if (req.body.email && req.body.password && req.body.fullName) {
 
-            const user = new User(req.body.email, req.body.password, req.body.fullName);
-            console.dir({ user });
-
-
             const sqlCreateUserQuery = "INSERT INTO users (email, password, fullName) VALUES ( ?, ?, ? )";
 
-            connectionPool.query(sqlCreateUserQuery, [user.email, user.password, user.fullName], function (err, rows, fields) {
+            connectionPool.query(sqlCreateUserQuery, [req.body.email, req.body.password, req.body.fullName], function (err, rows, fields) {
                 if (err) {
                     console.dir(err);
                     return next(new ApiError(err.sqlMessage, 500));
