@@ -16,12 +16,14 @@ module.exports = {
                 console.log(err);
                 next(new ApiError('Failed to retrieve', 500));
             }
+
+            var gameobjects = [];
             
             for (var i = 0; i < rows.length; i++) {
-                games.push(new Game(rows[i].title, rows[i].producer, rows[i].year, rows[i].Type));
+                gameobjects.push(new Game(rows[i].title, rows[i].producer, rows[i].year, rows[i].Type));
             }
 
-            res.status(200).json(games).end();
+            res.status(200).json(gameobjects).end();
         })
     },
 
