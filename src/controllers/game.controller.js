@@ -33,7 +33,12 @@ module.exports = {
         if (req.body.name && req.body.producer && req.body.year && req.body.type) {
             const game = new Game(req.body.name, req.body.producer, req.body.year, req.body.type);
 
-            connectionPool.query("INSERT INTO games ?, ?, ?, ?, ?, ?", function (err, rows, fields) {
+            connectionPool.query("INSERT INTO games (`ID`, `title`, `producer`, `year`, `Type`, `LaatstGewijzigdOp`) VALUES ?, ?, ?, ?, ?, ?", function (err, rows, fields) {
+                if (err) {
+                    console.log(err);
+                    return next(new ApiError('Failed to submit game', 500));
+                }
+
                 res.status(200).json(game).end();
             });
 
