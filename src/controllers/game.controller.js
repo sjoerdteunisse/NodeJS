@@ -2,6 +2,8 @@ const Game = require('../models/game.model');
 const ApiError = require('../models/apierror.model');
 const connectionPool = require('../config/mySql');
 
+// 
+
 var games = [
     //new Game('Battlefield 5', 'EA',2018, 'FPS')
 ];
