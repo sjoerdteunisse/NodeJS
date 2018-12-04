@@ -8,11 +8,11 @@ module.exports = {
 
         console.log('Authcontroller.register called');
 
-        if (req.body.email && req.body.password && req.body.fullName) {
+        if (req.body.email && req.body.password && req.body.firstName) {
 
-            const sqlCreateUserQuery = "INSERT INTO users (email, password, fullName) VALUES ( ?, ?, ? )";
+            const sqlCreateUserQuery = "INSERT INTO users (email, password, firstname) VALUES ( ?, ?, ? )";
 
-            connectionPool.query(sqlCreateUserQuery, [req.body.email, req.body.password, req.body.fullName], function (err, rows, fields) {
+            connectionPool.query(sqlCreateUserQuery, [req.body.email, req.body.password, req.body.firstName], function (err, rows, fields) {
                 if (err) {
                     console.dir(err);
                     return next(new ApiError(err.sqlMessage, 500));
