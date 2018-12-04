@@ -18,7 +18,7 @@ module.exports = {
                     return next(new ApiError(err.sqlMessage, 500));
                 }
 
-                res.status(200).json(user).end();
+                res.status(200).json({fm: req.body.email, firstname: req.body.firstname, lastName: req.body.lastname}).end();
             });
         }
         else {
