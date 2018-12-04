@@ -34,11 +34,10 @@ module.exports = {
             const game = new Game(req.body.name, req.body.producer, req.body.year, req.body.type);
 
             connectionPool.query("INSERT INTO games ?, ?, ?, ?, ?, ?", function (err, rows, fields) {
-            
+                res.status(200).json(game).end();
             });
 
             //games.push(game);
-            res.status(200).json(game).end();
         }
         else {
             const err = new ApiError('Failed to add object', '500');
