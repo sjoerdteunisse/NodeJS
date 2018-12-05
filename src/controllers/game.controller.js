@@ -2,6 +2,7 @@ const Game = require('../models/game.model');
 const ApiError = require('../models/apierror.model');
 const connectionPool = require('../config/mySql');
 
+
 module.exports = {
 
     getAll(req, res, next) {

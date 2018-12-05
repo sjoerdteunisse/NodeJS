@@ -1,12 +1,12 @@
 
 const router = require('express').Router();
 const gameController = require('../controllers/game.controller');
+const VerifyToken = require('../config/verifyToken');
 
-router.get('/games',gameController.getAll);
-router.post('/games', gameController.post);
-
-router.put('/games/:id', gameController.putById)
-router.get('/games/:id', gameController.getById);
-router.delete('/games/:id', gameController.deleteById);
+router.get('/games', VerifyToken , gameController.getAll);
+router.post('/games', VerifyToken , gameController.post);
+router.put('/games/:id',VerifyToken, gameController.putById)
+router.get('/games/:id', VerifyToken, gameController.getById);
+router.delete('/games/:id', VerifyToken , gameController.deleteById);
 
 module.exports = router;
