@@ -1,5 +1,4 @@
 class Game {
-
     constructor(name, prod, yr, tp){
         this.name = name.trim();
         this.producer = prod;

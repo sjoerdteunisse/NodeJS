@@ -6,6 +6,8 @@ const connectionPool = require('../config/mySql');
 module.exports = {
 
     getAll(req, res, next) {
+        console.log(`request made by ${req.userId}`);
+
         connectionPool.query("SELECT * FROM games", function (err, rows, fields) {
             if (err) {
                 console.log(err);
@@ -105,6 +107,7 @@ module.exports = {
                 return next(new ApiError('Fatal error occured', 500));
             }
 
+            console.log('afected = ' + rows.affectedRows +' res' + rows.affectedRows > 0);
             if(rows.affectedRows > 0){
                 res.status(200).json({ message: 'Succesfully removed' });
             }

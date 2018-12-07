@@ -6,9 +6,9 @@ const mysql = require('mysql2');
 
 const dbConfig = {
     host: process.env.DB_HOST || '127.0.0.1',
-    user: process.env.DB_USER || 'gamedb_user',
+    user: process.env.DB_USER || 'gamedb_test_user',
     password: process.env.DB_PASSWORD || 'secret',
-    database: process.env.DB_NAME || 'gamedb',
+    database: process.env.DB_NAME || 'gamedb_test',
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0

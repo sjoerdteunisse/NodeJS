@@ -1,17 +1,21 @@
-const chai = require('chai')
-const chaiHttp = require('chai-http')
-const server = require('../server')
+const chai = require('chai');
+const chaiHttp = require('chai-http');
+const server = require('../server');
 
-chai.should()
-chai.use(chaiHttp)
+chai.should();
+chai.use(chaiHttp);
 
-const endpointToTest = '/api/games'
+const endpointToTest = '/api/games';
 
 describe('Games API POST', () => {
     it('should return a valid game when posting a valid object', (done) => {
- 
+
+        const token = require('../test/authorization.controller.test').token;
+
+        console.log('TOKENA ' + token)
         chai.request(server)
             .post(endpointToTest)
+            .set('x-access-token', token)
             .send({
                 'name': 'gameName',
                 'producer': 'producer',
@@ -43,9 +47,12 @@ describe('Games API POST', () => {
     });
 
     it('should return a 500 error on posting an invalid object.', (done) => {
- 
+        const token = require('../test/authorization.controller.test').token;
+
+        console.log('before exception tk=' + token);
         chai.request(server)
             .post(endpointToTest)
+            .set('x-access-token', token)
             .send({
                 'name': 'gameName',
             })
@@ -62,7 +69,7 @@ describe('Games API POST', () => {
 describe('Calling an invalid route or failed call, should return an object of type ApiError', () => {
 
     it('should return a 404 error.', (done) => {
- 
+
         chai.request(server)
             .get('/api/gameszz')
             .send()
@@ -89,8 +96,11 @@ describe('Calling an invalid route or failed call, should return an object of ty
 describe('Games API PUT', () => {
 
     it('should return a valid game when puting a valid object', (done) => {
+        const token = require('../test/authorization.controller.test').token;
+
         chai.request(server)
             .put(endpointToTest + "/1")
+            .set('x-access-token', token)
             .send({
                 'name': 'gameName',
                 'producer': 'producer',
@@ -125,10 +135,11 @@ describe('Games API PUT', () => {
     });
 
     it('should return a 404 error that object cannot be modified as it is non existent', (done) => {
- 
+        const token = require('../test/authorization.controller.test').token;
 
         chai.request(server)
             .put(endpointToTest + "/50")
+            .set('x-access-token', token)
             .send({
                 'name': 'gameName',
                 'type': 'typeOfGame'
@@ -157,9 +168,11 @@ describe('Games API PUT', () => {
 describe('Games API GetAll', () => {
 
     it('should return a valid array of games (x) item', (done) => {
- 
+        const token = require('../test/authorization.controller.test').token;
+
         chai.request(server)
             .get(endpointToTest)
+            .set('x-access-token', token)
             .send()
             .end((err, res) => {
                 res.should.have.status(200)
@@ -189,9 +202,11 @@ describe('Games API GetAll', () => {
 describe('Games API GetById', () => {
 
     it('should return a valid game when getting object at position 3', (done) => {
+        const token = require('../test/authorization.controller.test').token;
  
         chai.request(server)
-            .get(endpointToTest + '/3')
+            .get(endpointToTest + '/1')
+            .set('x-access-token', token)
             .send()
             .end((err, res) => {
                 res.should.have.status(200)
@@ -213,11 +228,14 @@ describe('Games API GetById', () => {
 describe('Games API Delete', () => {
 
     it('should return status 200 and the message succesfully removed ', (done) => {
+        const token = require('../test/authorization.controller.test').token;
  
         chai.request(server)
             .del(endpointToTest + '/1')
+            .set('x-access-token', token)
             .send()
             .end((err, res) => {
+                console.log('identi' + err)
                 res.should.have.status(200)
                 res.body.should.be.a('object')
 
@@ -239,9 +257,11 @@ describe('Games API Delete', () => {
 describe('Games API Delete Non Existing', () => {
 
     it('should return status 404', (done) => {
- 
+        const token = require('../test/authorization.controller.test').token;
+
         chai.request(server)
             .del(endpointToTest + '/1000')
+            .set('x-access-token', token)
             .send()
             .end((err, res) => {
                 res.should.have.status(404)
