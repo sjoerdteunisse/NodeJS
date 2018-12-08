@@ -81,23 +81,59 @@ describe('Auth API', () => {
 
     it('creates a user on valid registration', (done) => {
 
-        // write your code here
-        // Kijk goed in de andere tests waar de done moet staan!
-        done()
+        var user = {
+            email: "SuperSecure@gmail.com",
+            password: "VerrySecure",
+            firstname: "Mc",
+            lastname: "Afee"
+        };
+
+        chai.request(server)
+        .post('/api/user/register')
+        .send(user)
+        .end(function (err, res) {
+            res.should.have.status(200);
+            // res.should.be.json;
+            done();
+        });
+        
     })
 
     it('returns an error on invalid registration', (done) => {
 
-        // write your code here
-        // Kijk goed in de andere tests waar de done moet staan!
-        done()
+        var user = {
+            email: "SuperSecure@gmail.com",
+            firstname: "Mc",
+            lastname: "Afee"
+        };
+
+        chai.request(server)
+        .post('/api/user/register')
+        .send(user)
+        .end(function (err, res) {
+            res.should.have.status(500);
+            // res.should.be.json;
+            done();
+        });
     })
 
     it('returns an error on invalid login', (done) => {
 
-        // write your code here
-        // Kijk goed in de andere tests waar de done moet staan!
-        done()
+        var user = {
+            email: 'user@server.com',
+            password: 'secret1',
+        }
+
+        bcrypt.hash(user.password, saltRounds, (err, hash) => {
+            chai.request(server)
+                .get('/api/user/login')
+                .send(user)
+                .end(function (err, res) {
+                    res.should.have.status(500);
+                    // res.should.be.json;
+                    done();
+                });
+        });
     })
 
     it('returns a token on valid login', function (done) {
