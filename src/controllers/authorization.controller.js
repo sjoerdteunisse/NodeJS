@@ -90,26 +90,29 @@ module.exports = {
                 return next(new ApiError(err.sqlMessage, 500));
             }
 
-            bcrypt.compare(password, rows[0].password, (err, compareResult) => {
-                if (compareResult) {
+            if (rows.length > 0) {
+                bcrypt.compare(password, rows[0].password, (err, compareResult) => {
+                    if (compareResult) {
 
-                    const userObj = { id: rows[0].ID, email: email };
+                        const userObj = { id: rows[0].ID, email: email };
 
+                        jwtAsync.sign(userObj, jwtConfig.secret, (err, authRes) => {
+                            if (err) {
+                                console.dir(err);
+                                return next(new ApiError(err, 500));
+                            }
 
-                    jwtAsync.sign(userObj, jwtConfig.secret, (err, authRes) => {
-                        if (err) {
-                            console.dir(err);
-                            return next(new ApiError(err, 500));
-                        }
-
-                        res.set('x-access-token', authRes);
-                        res.status(200).send({ token: authRes, exp: moment().add(10, 'days').unix, iat: moment().unix() });
-                    });
-                }
-                else {
-                    return next(new ApiError('Authentication failed', 500));
-                }
-            });
+                            res.set('x-access-token', authRes);
+                            res.status(200).send({ token: authRes, exp: moment().add(10, 'days').unix, iat: moment().unix() });
+                        });
+                    }
+                    else {
+                        return next(new ApiError('Authentication failed', 500));
+                    }
+                });
+            } else {
+                next(new ApiError('Authentication failed', 500));
+            }
         });
     }
 }

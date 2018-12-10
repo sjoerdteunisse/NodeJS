@@ -29,14 +29,14 @@ describe('Auth API', () => {
                 console.dir(err);
                 assert.fail(err)
             }
-            var queryReset = 'ALTER TABLE games AUTO_INCREMENT = 1'; 
+            var queryReset = 'ALTER TABLE games AUTO_INCREMENT = 1';
             pool.query(queryReset, (err, rows, fields) => {
                 if (err) {
                     console.dir(err);
                     assert.fail(err)
                 }
                 bcrypt.hash(user.password, saltRounds, (err, hash) => {
-                  
+
                     pool.query(query, (err, rows, fields) => {
                         if (err) {
                             console.dir(err);
@@ -89,14 +89,14 @@ describe('Auth API', () => {
         };
 
         chai.request(server)
-        .post('/api/user/register')
-        .send(user)
-        .end(function (err, res) {
-            res.should.have.status(200);
-            // res.should.be.json;
-            done();
-        });
-        
+            .post('/api/user/register')
+            .send(user)
+            .end(function (err, res) {
+                res.should.have.status(200);
+                // res.should.be.json;
+                done();
+            });
+
     })
 
     it('returns an error on invalid registration', (done) => {
@@ -108,13 +108,13 @@ describe('Auth API', () => {
         };
 
         chai.request(server)
-        .post('/api/user/register')
-        .send(user)
-        .end(function (err, res) {
-            res.should.have.status(500);
-            // res.should.be.json;
-            done();
-        });
+            .post('/api/user/register')
+            .send(user)
+            .end(function (err, res) {
+                res.should.have.status(500);
+                // res.should.be.json;
+                done();
+            });
     })
 
     it('returns an error on invalid login', (done) => {

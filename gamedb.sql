@@ -16,12 +16,6 @@ CREATE TABLE IF NOT EXISTS `games` (
 ) 
 ENGINE = InnoDB;
 
-INSERT INTO `games` (`title`, `producer`, `year`, `type`) VALUES
-('Battlefield 5', 'EA', 2018, 'FIRST_PERSON_SHOOTER'),
-('Fortnite', 'Epic Games', 2017, 'THIRD_PERSON_SHOOTER'),
-('Minecraft', 'Mojang', 2009, 'ADVENTURE');
-
-
 
 -- -----------------------------------------------------
 -- Table `users`
@@ -38,5 +32,3 @@ CREATE TABLE IF NOT EXISTS `users` (
 ) 
 ENGINE = InnoDB;
 
-INSERT INTO `users` (`firstname`, `lastname`, `email`, `password`) VALUES 
-('user', 'name', 'user@server.nl', 'secret');

@@ -17,8 +17,8 @@ function verifyToken(req, res, next) {
 
     jwtAsync.verify(token, jwtConfig.secret, function(err, decoded) {
    
-        if (decoded.email) {
-            req.userId = decoded.email;
+        if (decoded.id) {
+            req.userId = decoded.id;
             next();
         }
         else {
